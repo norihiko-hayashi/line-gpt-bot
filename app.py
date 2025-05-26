@@ -57,3 +57,6 @@ def handle_message(event):
                 messages=[TextMessage(text=reply_text)]
             )
         )
+@app.route("/")
+def index():
+    return "LINE GPT Bot is running!"
