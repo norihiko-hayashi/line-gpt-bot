@@ -1,7 +1,17 @@
+from flask import Flask, request, abort
+import json
+import datetime
+import os
+
+app = Flask(__name__)
+
+@app.route("/", methods=['GET'])
+def index():
+    return "LINE GPT Bot is running!", 200
+
 @app.route("/callback", methods=["POST"])
 def callback():
     try:
-        # payloadを取得（json以外のリクエストにも備える）
         if request.is_json:
             payload = request.get_json()
         else:
@@ -37,5 +47,9 @@ def callback():
         return "OK", 200
 
     except Exception as e:
-        # Herokuログに出力したい場合は print(e)
         return f"Error: {str(e)}", 500
+
+# Heroku の $PORT に対応
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
