@@ -3,7 +3,7 @@ import json
 import datetime
 import os
 
-app = Flask(__name__)  # ← これが必ず最初に必要！
+app = Flask(__name__)  # ← 最初に必要！
 
 @app.route("/", methods=['GET'])
 def index():
@@ -24,13 +24,22 @@ def callback():
                 user_id = event["source"].get("userId", "unknown")
                 timestamp = datetime.datetime.now().isoformat()
 
+                # グループIDまたは個人識別
+                source = event.get("source", {})
+                if source.get("type") == "group":
+                    group_id = source.get("groupId", "unknown_group")
+                else:
+                    group_id = "private_or_other"
+
                 log = {
                     "timestamp": timestamp,
                     "user": user_id,
+                    "group": group_id,
                     "message": text
                 }
 
-                log_path = "daily_log.json"
+                # グループIDごとにファイル名を分けて保存
+                log_path = f"daily_log_{group_id}.json"
                 if os.path.exists(log_path):
                     with open(log_path, "r", encoding="utf-8") as f:
                         data = json.load(f)
