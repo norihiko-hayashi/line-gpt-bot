@@ -1,20 +1,27 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 import json
 import datetime
 import os
 
 app = Flask(__name__)
 
+@app.route("/", methods=['GET'])
+def index():
+    return "LINE GPT Bot is running!", 200
+
 @app.route("/callback", methods=['POST'])
 def callback():
     try:
-        payload = request.json
+        payload = request.get_json()
+
+        if not payload:
+            return "No JSON payload", 400
 
         # LINEのイベント取得
         events = payload.get("events", [])
         for event in events:
             if event.get("type") == "message":
-                text = event["message"]["text"]
+                text = event["message"].get("text", "")
                 user_id = event["source"].get("userId", "unknown")
                 timestamp = datetime.datetime.now().isoformat()
 
