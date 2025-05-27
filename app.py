@@ -3,19 +3,16 @@ import json
 import datetime
 import os
 
-app = Flask(__name__)
+app = Flask(__name__)  # ← これが必ず最初に必要！
 
 @app.route("/", methods=['GET'])
 def index():
     return "LINE GPT Bot is running!", 200
 
-@app.route("/callback", methods=["POST"])
+@app.route("/callback", methods=['POST'])
 def callback():
     try:
-        if request.is_json:
-            payload = request.get_json()
-        else:
-            return "Invalid Content-Type", 400
+        payload = request.get_json()
 
         if not payload:
             return "No JSON payload", 400
@@ -47,9 +44,9 @@ def callback():
         return "OK", 200
 
     except Exception as e:
-        return f"Error: {str(e)}", 500
+        return f"Error: {e}", 500
 
-# Heroku の $PORT に対応
+# Heroku用：ポート番号を環境変数から取得してバインド
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
