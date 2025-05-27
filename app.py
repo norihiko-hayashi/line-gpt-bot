@@ -1,7 +1,11 @@
-@app.route("/callback", methods=['POST'])
+@app.route("/callback", methods=["POST"])
 def callback():
     try:
-        payload = request.get_json()
+        # payloadを取得（json以外のリクエストにも備える）
+        if request.is_json:
+            payload = request.get_json()
+        else:
+            return "Invalid Content-Type", 400
 
         if not payload:
             return "No JSON payload", 400
@@ -33,4 +37,5 @@ def callback():
         return "OK", 200
 
     except Exception as e:
-        return f"Error: {e}", 500
+        # Herokuログに出力したい場合は print(e)
+        return f"Error: {str(e)}", 500
