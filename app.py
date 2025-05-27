@@ -48,3 +48,5 @@ def callback():
 
     except Exception as e:
         return f"Error: {e}", 500
+if __name__ == "__main__":
+    app.run()
