@@ -1,14 +1,3 @@
-from flask import Flask, request, abort
-import json
-import datetime
-import os
-
-app = Flask(__name__)
-
-@app.route("/", methods=['GET'])
-def index():
-    return "LINE GPT Bot is running!", 200
-
 @app.route("/callback", methods=['POST'])
 def callback():
     try:
@@ -45,8 +34,3 @@ def callback():
 
     except Exception as e:
         return f"Error: {e}", 500
-
-# Heroku の $PORT に対応
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
