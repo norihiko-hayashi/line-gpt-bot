@@ -17,7 +17,6 @@ def callback():
         if not payload:
             return "No JSON payload", 400
 
-        # LINEのイベント取得
         events = payload.get("events", [])
         for event in events:
             if event.get("type") == "message":
@@ -25,14 +24,12 @@ def callback():
                 user_id = event["source"].get("userId", "unknown")
                 timestamp = datetime.datetime.now().isoformat()
 
-                # 保存データ作成
                 log = {
                     "timestamp": timestamp,
                     "user": user_id,
                     "message": text
                 }
 
-                # JSONファイルに追加保存
                 log_path = "daily_log.json"
                 if os.path.exists(log_path):
                     with open(log_path, "r", encoding="utf-8") as f:
@@ -48,5 +45,7 @@ def callback():
 
     except Exception as e:
         return f"Error: {e}", 500
+
+# 🔽 これが必ず最後に必要です（tryの外に）
 if __name__ == "__main__":
     app.run()
