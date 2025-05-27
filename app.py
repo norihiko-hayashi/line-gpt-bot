@@ -46,6 +46,7 @@ def callback():
     except Exception as e:
         return f"Error: {e}", 500
 
-# 🔽 これが必ず最後に必要です（tryの外に）
+# Heroku の $PORT に対応
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
